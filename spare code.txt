@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tamagotchi Login</title>
+  <script type="module" src="auth.js"></script>
+</head>
+<body>
+  <h1>ED Gotchi</h1>
+
+  <!-- Login Section -->
+  <div id="login-section">
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button id="signup">Sign Up</button>
+    <button id="login">Log In</button>
+    <button id="logout">Log Out</button>
+    <p><a href="#" onclick="showReset()">Forgot Password?</a></p>
+  </div>
+
+  <!-- Password Reset Section -->
+  <div id="reset-section" style="display: none;">
+    <h2>Reset Your Password</h2>
+    <input type="email" id="resetEmail" placeholder="Enter your email" />
+    <button onclick="sendPasswordReset()">Send Reset Email</button>
+    <p><a href="#" onclick="showLogin()">Back to Login</a></p>
+  </div>
+
+  <div id="user-info"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      // ... your other Firebase config
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Show reset password form
+    window.showReset = function () {
+      document.getElementById("login-section").style.display = "none";
+      document.getElementById("reset-section").style.display = "block";
+    };
+
+    // Return to login form
+    window.showLogin = function () {
+      document.getElementById("reset-section").style.display = "none";
+      document.getElementById("login-section").style.display = "block";
+    };
+
+    // Send password reset email
+    window.sendPasswordReset = function () {
+      const email = document.getElementById("resetEmail").value;
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          alert("Password reset email sent!");
+          showLogin();
+        })
+        .catch((error) => {
+          alert("Error: " + error.message);
+        });
+    };
+  </script>
+</body>
+</html>

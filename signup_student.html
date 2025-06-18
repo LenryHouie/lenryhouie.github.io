@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Sign Up</title>
+  <script type="module" src="signup_student.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 60px auto;
+      padding: 20px;
+      border: 2px solid #ccc;
+      border-radius: 12px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    input, button {
+      display: block;
+      width: 100%;
+      margin: 15px 0;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 6px;
+    }
+
+    button {
+      background-color: #00b4d8;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0077b6;
+    }
+  </style>
+</head>
+<body>
+  <h1>Student Sign Up</h1>
+
+  <input type="text" id="name" placeholder="Full Name" />
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Password" />
+  <input type="text" id="classCode" placeholder="Class Code (from your teacher)" />
+
+  <button id="signup">Create Account</button>
+</body>
+</html>

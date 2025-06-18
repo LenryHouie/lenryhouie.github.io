@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Teacher Sign Up</title>
+  <script type="module" src="signup_teacher.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 60px auto;
+      padding: 20px;
+      border: 2px solid #ccc;
+      border-radius: 12px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    input, select, button {
+      display: block;
+      width: 100%;
+      margin: 15px 0;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 6px;
+    }
+
+    button {
+      background-color: #00b4d8;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0077b6;
+    }
+  </style>
+</head>
+<body>
+  <h1>Teacher Sign Up</h1>
+
+  <input type="text" id="name" placeholder="Full Name" />
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Password" />
+  
+  <select id="grade">
+    <option value="">Select Grade Level</option>
+    <option value="Elementary">Elementary</option>
+    <option value="Middle School">Middle School</option>
+    <option value="High School">High School</option>
+  </select>
+
+  <input type="text" id="subject" placeholder="Subject (e.g., Math, Science)" />
+
+  <button id="signup">Create Account</button>
+</body>
+</html>
