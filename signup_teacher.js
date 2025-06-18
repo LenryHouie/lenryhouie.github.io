@@ -20,6 +20,11 @@ document.getElementById("signup").addEventListener("click", async () => {
   const grade = document.getElementById("grade").value;
   const subject = document.getElementById("subject").value;
 
+  if (!name || !email || !password || !grade || !subject) {
+    alert("Please fill in all fields.");
+    return; // Stop the function before try runs
+  }
+
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
