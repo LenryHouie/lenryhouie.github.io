@@ -37,7 +37,7 @@ document.getElementById("signup").addEventListener("click", async () => {
       subject
     });
 
-    window.location.href = "teacher_dashboard.html";
+    window.location.href = "index.html";
   } catch (error) {
     alert(error.message);
   }

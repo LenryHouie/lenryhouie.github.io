@@ -35,7 +35,7 @@ document.getElementById("signup").addEventListener("click", async () => {
       classCode
     });
 
-    window.location.href = "student_dashboard.html";
+    window.location.href = "index.html";
   } catch (error) {
     alert(error.message);
   }
