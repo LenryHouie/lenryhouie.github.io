@@ -20,9 +20,13 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-document.getElementById("login").addEventListener("click", async () => {
-  const email = prompt("Email:");
-  const password = prompt("Password:");
+document.getElementById("login").addEventListener("click", () => {
+  document.getElementById("login-form").style.display = "block";
+});
+
+document.getElementById("submit-login").addEventListener("click", async () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
