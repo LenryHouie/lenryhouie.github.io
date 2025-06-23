@@ -21,43 +21,46 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// 💡 Helper to generate a random class code
-function generateClassCode() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  return Array.from({ length: 6 }, () =>
-    chars.charAt(Math.floor(Math.random() * chars.length))
-  ).join("");
-}
-
-// 👤 When teacher logs in
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const docRef = doc(db, "teachers", user.uid);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const teacherData = docSnap.data();
-      document.getElementById("teacher-info").innerHTML = `
-        <p><strong>Name:</strong> ${teacherData.name}</p>
-        <p><strong>Grade:</strong> ${teacherData.grade}</p>
-        <p><strong>Subject:</strong> ${teacherData.subject}</p>
-      `;
-
-      // Listen for create-class button
-      document
-        .getElementById("create-class")
-        .addEventListener("click", async () => {
-          const newCode = generateClassCode();
-          await updateDoc(docRef, { classCode: newCode });
-
-          document.getElementById("class-code").textContent =
-            "New Class Code: " + newCode;
-        });
-    } else {
-      document.getElementById("teacher-info").textContent =
-        "No teacher info found.";
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = "index.html";
     }
-  } else {
-    window.location.href = "signup_teacher.html"; // Redirect if not logged in
+
+    document.getElementById("create-class-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const subject = document.getElementById("subject").value.trim();
+      const grade = document.getElementById("grade").value;
+
+      if (!subject || !grade) {
+        alert("Please complete all fields.");
+        return;
+      }
+
+      const classCode = generateClassCode();
+
+      try {
+        await addDoc(collection(db, "classrooms"), {
+          teacherId: user.uid,
+          classCode,
+          subject,
+          gradeLevel: grade,
+          createdAt: Timestamp.now()
+        });
+
+        document.getElementById("class-info").innerHTML = `
+          <p><strong>Classroom Created!</strong></p>
+          <p>Class Code: <code>${classCode}</code></p>
+          <p>Subject: ${subject}</p>
+          <p>Grade: ${grade}</p>
+        `;
+      } catch (err) {
+        console.error("Error creating classroom:", err);
+        alert("Failed to create class. Try again.");
+      }
+    });
+  });
+
+  function generateClassCode() {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
   }
-});

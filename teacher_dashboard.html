@@ -49,7 +49,19 @@
 
   <div id="teacher-info">Loading your info...</div>
 
-  <button id="create-class">Create New Class</button>
-  <div id="class-code"></div>
+  <h2>Create a New Classroom</h2>
+<form id="create-class-form">
+  <input type="text" id="subject" placeholder="Subject" required />
+  <select id="grade">
+    <option value="">Select Grade Level</option>
+    <option value="Elementary">Elementary</option>
+    <option value="Middle School">Middle School</option>
+    <option value="High School">High School</option>
+  </select>
+  <button type="submit">Create Class</button>
+</form>
+
+<div id="class-info"></div>
+
 </body>
 </html>
