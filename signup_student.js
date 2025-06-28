@@ -35,6 +35,7 @@ document.getElementById("signup").addEventListener("click", async () => {
       classCode
     });
 
+    alert("Student account created! Please sign in.");
     window.location.href = "index.html";
   } catch (error) {
     alert(error.message);
