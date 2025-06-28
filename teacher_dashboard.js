@@ -7,8 +7,13 @@ import {
   getFirestore,
   doc,
   addDoc,
+  collection,
+  query,
+  where,
+  getDocs,
   getDoc,
   updateDoc,
+  Timestamp
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 // 🔐 Use your Firebase config
@@ -27,6 +32,8 @@ onAuthStateChanged(auth, (user) => {
     window.location.href = "index.html";
     return;
   }
+
+  const teacherId = user.uid; //defines teacher id
 
   document.getElementById("create-classroom-btn").addEventListener("click", async () => {
     const classCode = generateClassCode();
