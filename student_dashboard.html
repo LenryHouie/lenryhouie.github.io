@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Dashboard</title>
+  <script type="module" src="student_dashboard.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    #student-info {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f0f0f0;
+      border-radius: 8px;
+    }
+
+    input {
+      padding: 10px;
+      margin-right: 10px;
+      width: 200px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #00b4d8;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0077b6;
+    }
+
+    .classroom {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome, Student!</h1>
+
+  <div id="student-info">Loading your info...</div>
+
+  <h2>Join a Classroom</h2>
+  <input type="text" id="class-code-input" placeholder="Enter Class Code" />
+  <button id="join-classroom-btn">Join</button>
+
+  <h3>Your Classrooms:</h3>
+  <div id="classroom-list"></div>
+</body>
+</html>
