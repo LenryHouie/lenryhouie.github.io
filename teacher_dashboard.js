@@ -6,6 +6,7 @@ import {
 import {
   getFirestore,
   doc,
+  addDoc,
   getDoc,
   updateDoc,
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
@@ -22,12 +23,12 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      window.location.href = "index.html";
-      return;
-    }
+  if (!user) {
+    window.location.href = "index.html";
+    return;
+  }
 
-    document.getElementById("create-classroom-btn").addEventListener("click", async () => {
+  document.getElementById("create-classroom-btn").addEventListener("click", async () => {
     const classCode = generateClassCode();
 
     try {
