@@ -24,43 +24,48 @@ const db = getFirestore(app);
 onAuthStateChanged(auth, (user) => {
     if (!user) {
       window.location.href = "index.html";
+      return;
     }
 
-    document.getElementById("create-class-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
+    document.getElementById("create-classroom-btn").addEventListener("click", async () => {
+    const classCode = generateClassCode();
 
-      const subject = document.getElementById("subject").value.trim();
-      const grade = document.getElementById("grade").value;
-
-      if (!subject || !grade) {
-        alert("Please complete all fields.");
-        return;
-      }
-
-      const classCode = generateClassCode();
-
-      try {
-        await addDoc(collection(db, "classrooms"), {
-          teacherId: user.uid,
-          classCode,
-          subject,
-          gradeLevel: grade,
-          createdAt: Timestamp.now()
-        });
-
-        document.getElementById("class-info").innerHTML = `
-          <p><strong>Classroom Created!</strong></p>
-          <p>Class Code: <code>${classCode}</code></p>
-          <p>Subject: ${subject}</p>
-          <p>Grade: ${grade}</p>
-        `;
-      } catch (err) {
-        console.error("Error creating classroom:", err);
-        alert("Failed to create class. Try again.");
-      }
-    });
+    try {
+      await addDoc(collection(db, "classrooms"), {
+        teacherId: teacherId,
+        classCode: classCode,
+        createdAt: Timestamp.now()
+      });
+      alert(`Classroom created! Code: ${classCode}`);
+      loadClassrooms(teacherId);
+    } catch (error) {
+      console.error("Error creating classroom:", error);
+      alert("Failed to create classroom.");
+    }
   });
 
-  function generateClassCode() {
-    return Math.random().toString(36).substring(2, 8).toUpperCase();
-  }
+  // Load classrooms
+  loadClassrooms(teacherId);
+});
+
+async function loadClassrooms(teacherId) {
+  const classroomList = document.getElementById("classroom-list");
+  classroomList.innerHTML = ""; // Clear current list
+
+  const q = query(collection(db, "classrooms"), where("teacherId", "==", teacherId));
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach((doc) => {
+    const classroom = doc.data();
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <p>Class Code: ${classroom.classCode}</p>
+      <button onclick="window.location.href='classroom.html?id=${doc.id}'">Go to Classroom</button>
+    `;
+    classroomList.appendChild(div);
+  });
+}
+
+function generateClassCode() {
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+}
