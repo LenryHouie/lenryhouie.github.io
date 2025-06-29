@@ -17,9 +17,8 @@ document.getElementById("signup").addEventListener("click", async () => {
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
-  const classCode = document.getElementById("classCode").value;
 
-  if (!name || !email || !password || !classCode) {
+  if (!name || !email || !password) {
     alert("Please fill in all fields.");
     return;
   }
@@ -31,8 +30,7 @@ document.getElementById("signup").addEventListener("click", async () => {
     await setDoc(doc(db, "students", user.uid), {
       name,
       email,
-      role: "student",
-      classCode
+      role: "student"
     });
 
     alert("Student account created! Please sign in.");
