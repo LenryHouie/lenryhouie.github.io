@@ -66,13 +66,14 @@ async function loadClassrooms(teacherId) {
   querySnapshot.forEach((doc) => {
     const classroom = doc.data();
     const div = document.createElement("div");
-    div.className = 'classroom';
-    div.innerHTML = `
-        <p>Class Code: ${classroom.classCode}</p>
-        <button onclick="window.location.href='classroom.html?id=${id}'">Go to Classroom</button>
-      `;
+    div.className = "classroom";  // ✅ style hook
+    div.innerHTML = `<p>Class Code: ${classroom.classCode}</p>`;
+    div.addEventListener("click", () => {
+      window.location.href = `classroom.html?id=${doc.id}`;
+    });
     classroomList.appendChild(div);
   });
+
 }
 
 function generateClassCode() {
