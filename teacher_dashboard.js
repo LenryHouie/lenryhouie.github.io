@@ -67,9 +67,12 @@ async function loadClassrooms(teacherId) {
     const classroom = doc.data();
     const div = document.createElement("div");
     div.innerHTML = `
-      <p>Class Code: ${classroom.classCode}</p>
-      <button onclick="window.location.href='classroom.html?id=${doc.id}'">Go to Classroom</button>
-    `;
+      <p>Class code: ${classroom.classCode}</p>
+      `;
+
+    div.addEventListener('click', () => {
+      window.location.href = `classroom.html?id=${doc.id}`;
+    });
     classroomList.appendChild(div);
   });
 }
