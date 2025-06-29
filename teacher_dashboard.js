@@ -66,6 +66,7 @@ async function loadClassrooms(teacherId) {
   querySnapshot.forEach((doc) => {
     const classroom = doc.data();
     const div = document.createElement("div");
+    div.className = 'classroom';
     div.innerHTML = `
         <p>Class Code: ${classroom.classCode}</p>
         <button onclick="window.location.href='classroom.html?id=${id}'">Go to Classroom</button>
