@@ -1,17 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
   <title>Classroom</title>
 </head>
 <body>
-  <h1>Classroom Details</h1>
-  <p>This is where student scoring & question creation will go!</p>
-  <script>
-    // Example: Read classroom ID from URL
+  <h1 id="classHeader">Loading...</h1>
+  <button id="generateQuestionsBtn">Create Questions</button>
+  <div id="questionsContainer"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      collection,
+      addDoc,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC7q11pgl578bVjPwDXojkFbyeO2M47Hqo",
+      authDomain: "tamaed-1fa70.firebaseapp.com",
+      projectId: "tamaed-1fa70",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Get classroom ID from URL
     const urlParams = new URLSearchParams(window.location.search);
-    const classroomId = urlParams.get('id');
-    console.log("Opened Classroom ID:", classroomId);
+    const classroomId = urlParams.get("id");
+
+    const classHeader = document.getElementById("classHeader");
+    const questionsContainer = document.getElementById("questionsContainer");
+    const generateBtn = document.getElementById("generateQuestionsBtn");
+
+    let classCode = "";
+    let gradeLevel = "4"; // Optional: dynamically define later
+    let subject = "Math"; // Optional: dynamically define later
+
+    async function loadClassroom() {
+      const docRef = doc(db, "classrooms", classroomId);
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        classHeader.innerText = "Classroom not found.";
+        generateBtn.disabled = true;
+        return;
+      }
+
+      const classroom = docSnap.data();
+      classCode = classroom.classCode;
+      classHeader.innerText = `Classroom ${classCode}`;
+    }
+
+    async function generateQuestions() {
+      const prompt = `Grade ${gradeLevel} ${subject}`;
+      const questions = [
+        `What is one ${subject.toLowerCase()} concept for grade ${gradeLevel}?`,
+        `Give an example problem in grade ${gradeLevel} ${subject.toLowerCase()}.`,
+        `Why is ${subject.toLowerCase()} important in grade ${gradeLevel}?`
+      ];
+
+      // Add each question to the subcollection
+      const questionsRef = collection(db, "classrooms", classroomId, "questions");
+      for (const text of questions) {
+        await addDoc(questionsRef, { text });
+      }
+
+      // Refresh question list
+      loadQuestions();
+    }
+
+    async function loadQuestions() {
+      questionsContainer.innerHTML = "<h3>Questions:</h3><ul>";
+      const questionsRef = collection(db, "classrooms", classroomId, "questions");
+      const querySnapshot = await getDocs(questionsRef);
+      querySnapshot.forEach((doc) => {
+        const q = doc.data().text;
+        questionsContainer.innerHTML += `<li>${q}</li>`;
+      });
+      questionsContainer.innerHTML += "</ul>";
+    }
+
+    generateBtn.addEventListener("click", generateQuestions);
+
+    // Initial load
+    await loadClassroom();
+    await loadQuestions();
   </script>
 </body>
 </html>
