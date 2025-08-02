@@ -37,23 +37,66 @@ document.getElementById("createQuestionBtn").addEventListener("click", async () 
     return;
   }
 
-  const questionParams = {
-    subject: classroomData.subject,
-    topic: topic,
-    gradeLevel: classroomData.gradeLevel,
-    difficulty: difficulty
-  };
+  try {
+    await addDoc(collection(db, "questiosn"), {
+      classroomID: classroomId,
+      difficulty,
+      topic,
+      createdAt: Timestamp.now()
+    })
 
-  const questionText = generateTemplateQuestion(questionParams);
 
-  const questionsRef = collection(db, "classrooms", classroomId, "questions");
-  await addDoc(questionsRef, {
-    ...questionParams,
-    text: questionText,
-    createdAt: new Date()
-  });
-
-  alert("Question added!");
+  document.getElementById("questionStatus").textContent = "Questions created successfully!";
+  document.getElementById("topicInput").value = ""; //Clear input field
+  loadQuestions();
+  } catch (error) {
+    console.error("Error creating question:", error);
+    document.getElementById("questionStatus").textContent = "Error creating question.";
+  }
 });
 
-fetchClassroomInfo();
+// 🔄 Load and display questions
+async function loadQuestions() {
+  const qList = document.getElementById("questionList");
+  qList.innerHTML = "";
+
+  const q = query(collection(db, "questions"), where("classroomId", "==", classroomId));
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+
+    const questionBox = document.createElement("div");
+    questionBox.style.border = "1px solid #ccc";
+    questionBox.style.padding = "10px";
+    questionBox.style.margin = "10px 0";
+    questionBox.style.display = "flex";
+    questionBox.style.justifyContent = "space-between";
+    questionBox.style.alignItems = "center";
+    questionBox.style.borderRadius = "8px";
+    questionBox.style.backgroundColor = "#f9f9f9";
+
+    const text = document.createElement("span");
+    text.textContent = `Topic: ${data.topic} | Difficulty: ${data.difficulty}`;
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "❌";
+    deleteBtn.style.marginLeft = "10px";
+    deleteBtn.style.backgroundColor = "transparent";
+    deleteBtn.style.border = "none";
+    deleteBtn.style.cursor = "pointer";
+    deleteBtn.style.color = "#cc0000";
+    deleteBtn.title = "Delete this question";
+
+    deleteBtn.addEventListener("click", async () => {
+      await deleteDoc(doc(db, "questions", docSnap.id));
+      loadQuestions(); // Refresh list
+    });
+
+    questionBox.appendChild(text);
+    questionBox.appendChild(deleteBtn);
+    qList.appendChild(questionBox);
+  });
+}
+
+loadQuestions();
