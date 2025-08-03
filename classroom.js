@@ -3,7 +3,9 @@ import {
   doc,
   getDoc,
   collection,
-  addDoc
+  addDoc,
+  Timestamp,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 const db = getFirestore(app);
