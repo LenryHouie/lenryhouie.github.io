@@ -37,11 +37,20 @@ document.getElementById("createQuestionBtn").addEventListener("click", async () 
     return;
   }
 
+  const questionParams = {
+    subject: classroomData.subject,
+    topic,
+    gradeLevel: classroomData.gradeLevel,
+    difficulty
+  };
+
+  const questionText = generateTemplateQuestion(questionParams);
+
   try {
-    await addDoc(collection(db, "questiosn"), {
-      classroomID: classroomId,
-      difficulty,
-      topic,
+    await addDoc(collection(db, "questions"), {
+      classroomId,
+      ...questionParams,
+      text: questionText,
       createdAt: Timestamp.now()
     })
 
@@ -77,7 +86,7 @@ async function loadQuestions() {
     questionBox.style.backgroundColor = "#f9f9f9";
 
     const text = document.createElement("span");
-    text.textContent = `Topic: ${data.topic} | Difficulty: ${data.difficulty}`;
+    text.textContent = data.text || `Topic: ${data.topic} | Difficulty: ${data.difficulty}`;
 
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "❌";
