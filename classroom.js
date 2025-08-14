@@ -5,7 +5,10 @@ import {
   collection,
   addDoc,
   Timestamp,
-  deleteDoc
+  deleteDoc,
+  query,
+  where,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 const db = getFirestore(app);
@@ -23,6 +26,7 @@ async function fetchClassroomInfo() {
   }
 }
 
+// Template question generator
 function generateTemplateQuestion({ subject, topic, gradeLevel, difficulty }) {
   return `(${difficulty}) Grade ${gradeLevel} ${subject} - Topic: ${topic}
 Q: Explain one key idea about ${topic} in ${subject}.`;
@@ -54,12 +58,11 @@ document.getElementById("createQuestionBtn").addEventListener("click", async () 
       ...questionParams,
       text: questionText,
       createdAt: Timestamp.now()
-    })
+    });
 
-
-  document.getElementById("questionStatus").textContent = "Questions created successfully!";
-  document.getElementById("topicInput").value = ""; //Clear input field
-  loadQuestions();
+    document.getElementById("questionStatus").textContent = "Question created successfully!";
+    document.getElementById("topicInput").value = ""; // Clear input field
+    loadQuestions();
   } catch (error) {
     console.error("Error creating question:", error);
     document.getElementById("questionStatus").textContent = "Error creating question.";
@@ -98,16 +101,4 @@ async function loadQuestions() {
     deleteBtn.style.cursor = "pointer";
     deleteBtn.style.color = "#cc0000";
     deleteBtn.title = "Delete this question";
-
-    deleteBtn.addEventListener("click", async () => {
-      await deleteDoc(doc(db, "questions", docSnap.id));
-      loadQuestions(); // Refresh list
-    });
-
-    questionBox.appendChild(text);
-    questionBox.appendChild(deleteBtn);
-    qList.appendChild(questionBox);
-  });
-}
-
-loadQuestions();
+    
