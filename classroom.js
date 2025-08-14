@@ -101,4 +101,17 @@ async function loadQuestions() {
     deleteBtn.style.cursor = "pointer";
     deleteBtn.style.color = "#cc0000";
     deleteBtn.title = "Delete this question";
-    
+
+    deleteBtn.addEventListener("click", async () => {
+      await deleteDoc(doc(db, "questions", docSnap.id));
+      loadQuestions(); // Refresh list
+    });
+
+    questionBox.appendChild(text);
+    questionBox.appendChild(deleteBtn);
+    qList.appendChild(questionBox);
+  });
+}
+
+// Fetch classroom info first before loading questions
+fetchClassroomInfo().then(loadQuestions);
