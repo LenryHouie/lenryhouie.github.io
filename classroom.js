@@ -130,12 +130,12 @@ fetchClassroomInfo().then(loadQuestions);
 const questionRef = collection(db, "classrooms", classroomId, "questions");
 
 // Listen for real-time updates
-onSnapshot(questionRef, (snapshot) => {
-  questionList.innerHTML = ""; //Clear before rendering
-  snapshot.forEach((doc) => {
-    const question = doc.data();
-    const div = document.createElement("div");
-    div.textContent = `${question.difficulty} - ${question.topic} : ${question.text || "(no question text)"}`;
-    questionList.appendChild(div);
-  });
-});
+//onSnapshot(questionRef, (snapshot) => {
+//  questionList.innerHTML = ""; //Clear before rendering
+//  snapshot.forEach((doc) => {
+//    const question = doc.data();
+//   const div = document.createElement("div");
+//   div.textContent = `${question.difficulty} - ${question.topic} : ${question.text || "(no question text)"}`;
+//    questionList.appendChild(div);
+//  });
+//});
