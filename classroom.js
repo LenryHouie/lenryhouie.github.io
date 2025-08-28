@@ -79,7 +79,7 @@ document.getElementById("createQuestionBtn").addEventListener("click", async () 
     document.getElementById("questionStatus").textContent = "Error creating question.";
   }
 });
-
+/*
 // 🔄 Load and display questions
 async function loadQuestions() {
   const qList = document.getElementById("questionList");
@@ -126,16 +126,20 @@ async function loadQuestions() {
 
 // Fetch classroom info first before loading questions
 fetchClassroomInfo().then(loadQuestions);
+*/
 
-const questionRef = collection(db, "classrooms", classroomId, "questions");
+const questionsRef = collection(db, "classrooms", classroomId, "questions");
 
 // Listen for real-time updates
-//onSnapshot(questionRef, (snapshot) => {
-//  questionList.innerHTML = ""; //Clear before rendering
-//  snapshot.forEach((doc) => {
-//    const question = doc.data();
-//   const div = document.createElement("div");
-//   div.textContent = `${question.difficulty} - ${question.topic} : ${question.text || "(no question text)"}`;
-//    questionList.appendChild(div);
-//  });
-//});
+onSnapshot(questionsRef, (snapshot) => {
+  const questionsList = document.getElementById("questions-List");
+  questionList.innerHTML = ""; //Clear before rendering
+
+
+  snapshot.forEach((questionDoc) => {
+    const question = doc.data();
+   const div = document.createElement("div");
+   div.textContent = `${question.difficulty} - ${question.topic} : ${question.text || "(no question text)"}`;
+    questionList.appendChild(div);
+  });
+});
