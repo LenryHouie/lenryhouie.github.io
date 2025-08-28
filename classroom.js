@@ -79,54 +79,14 @@ document.getElementById("createQuestionBtn").addEventListener("click", async () 
     document.getElementById("questionStatus").textContent = "Error creating question.";
   }
 });
-/*
-// 🔄 Load and display questions
-async function loadQuestions() {
-  const qList = document.getElementById("questionList");
-  qList.innerHTML = "";
 
-  const q = query(collection(db, "questions"), where("classroomId", "==", classroomId));
-  const querySnapshot = await getDocs(q);
-
-  querySnapshot.forEach((docSnap) => {
-    const data = docSnap.data();
-
-    const questionBox = document.createElement("div");
-    questionBox.style.border = "1px solid #ccc";
-    questionBox.style.padding = "10px";
-    questionBox.style.margin = "10px 0";
-    questionBox.style.display = "flex";
-    questionBox.style.justifyContent = "space-between";
-    questionBox.style.alignItems = "center";
-    questionBox.style.borderRadius = "8px";
-    questionBox.style.backgroundColor = "#f9f9f9";
-
-    const text = document.createElement("span");
-    text.textContent = data.text || `Topic: ${data.topic} | Difficulty: ${data.difficulty}`;
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "❌";
-    deleteBtn.style.marginLeft = "10px";
-    deleteBtn.style.backgroundColor = "transparent";
-    deleteBtn.style.border = "none";
-    deleteBtn.style.cursor = "pointer";
-    deleteBtn.style.color = "#cc0000";
-    deleteBtn.title = "Delete this question";
-
-    deleteBtn.addEventListener("click", async () => {
-      await deleteDoc(doc(db, "questions", docSnap.id));
-      loadQuestions(); // Refresh list
-    });
-
-    questionBox.appendChild(text);
-    questionBox.appendChild(deleteBtn);
-    qList.appendChild(questionBox);
-  });
-}
-
-// Fetch classroom info first before loading questions
-fetchClassroomInfo().then(loadQuestions);
-*/
+document.getElementById("deleteClassroomBtn").addEventListener("click", async () => {
+  const confirmDelete = confirm("Are you sure you want to delete this classroom?");
+  if (confirmDelete) {
+    await deleteDoc(doc(db, "classrooms", classroomId));
+    alert("Classroom deleted successfully."); // Redirect to homepage or another page
+  }
+});
 
 const questionsRef = collection(db, "classrooms", classroomId, "questions");
 
