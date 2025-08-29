@@ -80,11 +80,11 @@ document.getElementById("createQuestionBtn").addEventListener("click", async () 
   }
 });
 
-document.getElementById("deleteClassroomBtn").addEventListener("click", async () => {
-  const confirmDelete = confirm("Are you sure you want to delete this classroom?");
+document.getElementById("deleteQuestionBtn").addEventListener("click", async () => {
+  const confirmDelete = confirm("Are you sure you want to delete this question?");
   if (confirmDelete) {
-    await deleteDoc(doc(db, "classrooms", classroomId));
-    alert("Classroom deleted successfully."); // Redirect to homepage or another page
+    await deleteDoc(doc(db, "questions", classroomId));
+    alert("Question deleted successfully."); // Redirect to homepage or another page
   }
 });
 
