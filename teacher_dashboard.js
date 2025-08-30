@@ -64,13 +64,13 @@ async function loadClassrooms(teacherId) {
   const q = query(collection(db, "classrooms"), where("teacherId", "==", teacherId));
   const querySnapshot = await getDocs(q);
 
-  querySnapshot.forEach((doc) => {
-    const classroom = doc.data();
+  querySnapshot.forEach((docSnap) => {
+    const classroom = docSnap.data();
     const div = document.createElement("div");
     div.className = "classroom";  // ✅ style hook
     div.innerHTML = `<p>Class Code: ${classroom.classCode}</p>`;
     div.addEventListener("click", () => {
-      window.location.href = `classroom.html?id=${doc.id}`;
+      window.location.href = `classroom.html?id=${docSnap.id}`;
     });
     classroomList.appendChild(div);
 
@@ -87,7 +87,7 @@ async function loadClassrooms(teacherId) {
       e.stopPropagation(); // Prevent triggering the classroom click event
       const confirmDelete = confirm('Are you sure you want to delete this classroom?');
       if (confirmDelete) {
-        await deleteDoc(doc(db,'classrooms', doc.id));
+        await deleteDoc(doc(db,'classrooms', docSnap.id));
         alert('Classroom has been successfully deleted.');
         loadClassrooms(teacherId);
       }
