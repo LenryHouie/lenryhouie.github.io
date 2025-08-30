@@ -101,5 +101,27 @@ onSnapshot(questionsRef, (snapshot) => {
    const div = document.createElement("div");
    div.textContent = `${question.difficulty} - ${question.topic} : ${question.text || "(no question text)"}`;
     questionList.appendChild(div);
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = "Delete";
+    deleteBtn.style.marginLeft = "10px";
+    deleteBtn.style.background = "red";
+    deleteBtn.style.color = "white";
+    deleteBtn.style.border = "none";
+    deleteBtn.style.borderRadius = "5px";
+    deleteBtn.style.cursor = "pointer";
+
+    deleteBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const confirmDelete('Are you sure you want to delete this question?');
+      if (confirmDelete) {
+        await deleteDoc(doc(db, 'questions',docSnap.id))
+        alert('Question has been successfully deleted.');
+        loadQuestions();
+      }
+    })
+
+    questionList.appendChild(div);
+    questionList.appendChild(deleteBtn);
   });
 });
