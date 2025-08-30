@@ -97,7 +97,7 @@ onSnapshot(questionsRef, (snapshot) => {
 
 
   snapshot.forEach((questionDoc) => {
-    const question = doc.data();
+    const question = questionDoc.data();
    const div = document.createElement("div");
    div.textContent = `${question.difficulty} - ${question.topic} : ${question.text || "(no question text)"}`;
     questionList.appendChild(div);
