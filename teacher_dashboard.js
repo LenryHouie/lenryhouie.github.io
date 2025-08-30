@@ -12,6 +12,7 @@ import {
   where,
   getDocs,
   getDoc,
+  deleteDoc,
   updateDoc,
   Timestamp
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
@@ -72,17 +73,27 @@ async function loadClassrooms(teacherId) {
       window.location.href = `classroom.html?id=${doc.id}`;
     });
     classroomList.appendChild(div);
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = "Delete";
+    deleteBtn.style.marginLeft = "10px";
+    deleteBtn.style.background = "red";
+    deleteBtn.style.color = "white";
+    deleteBtn.style.border = "none";
+    deleteBtn.style.borderRadius = "5px";
+    deleteBtn.style.cursor = "pointer";
+
+    deleteBtn.addEventListener('click', async (e) => {
+      e.stopPropagation(); // Prevent triggering the classroom click event
+      const confirmDelete = confirm('Are you sure you want to delete this classroom?');
+      if (confirmDelete) {
+        await deleteDoc(doc(db,'classrooms', docSnap.id));
+        alert('Classroom has been successfully deleted.');
+        loadClassrooms(teacherId);
+      }
+    })
   });
-
 }
-
-document.getElementById("deleteClassroomBtn").addEventListener("click", async () => {
-  const confirmDelete = confirm("Are you sure you want to delete this classroom?");
-  if (confirmDelete) {
-    await deleteDoc(doc(db, "questions", classroomId));
-    alert("Question deleted successfully."); // Redirect to homepage or another page
-  }
-});
 
 function generateClassCode() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
