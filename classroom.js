@@ -113,7 +113,7 @@ onSnapshot(questionsRef, (snapshot) => {
 
     deleteBtn.addEventListener('click', async (e) => {
       e.stopPropagation();
-      const confirmDelete('Are you sure you want to delete this question?');
+      const confirmDelete = confirm('Are you sure you want to delete this question?');
       if (confirmDelete) {
         await deleteDoc(doc(db, 'questions',docSnap.id))
         alert('Question has been successfully deleted.');
