@@ -92,6 +92,9 @@ async function loadClassrooms(teacherId) {
         loadClassrooms(teacherId);
       }
     })
+
+    div.appendChild(deleteBtn);
+    classroomList.appendChild(div);
   });
 }
 
