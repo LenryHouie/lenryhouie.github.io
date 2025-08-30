@@ -73,7 +73,6 @@ document.getElementById("createQuestionBtn").addEventListener("click", async () 
 
     document.getElementById("questionStatus").textContent = "Question created successfully!";
     document.getElementById("topicInput").value = ""; // Clear input field
-    loadQuestions();
   } catch (error) {
     console.error("Error creating question:", error);
     document.getElementById("questionStatus").textContent = "Error creating question.";
@@ -109,11 +108,9 @@ onSnapshot(questionsRef, (snapshot) => {
       if (confirmDelete) {
         await deleteDoc(doc(db, 'questions',questionDoc.id))
         alert('Question has been successfully deleted.');
-        loadQuestions();
       }
     })
-
-    questionList.appendChild(div);
     div.appendChild(deleteBtn);
+    questionList.appendChild(div);
   });
 });
