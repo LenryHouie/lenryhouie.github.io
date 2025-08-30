@@ -80,14 +80,6 @@ document.getElementById("createQuestionBtn").addEventListener("click", async () 
   }
 });
 
-document.getElementById("deleteQuestionBtn").addEventListener("click", async () => {
-  const confirmDelete = confirm("Are you sure you want to delete this question?");
-  if (confirmDelete) {
-    await deleteDoc(doc(db, "questions", classroomId));
-    alert("Question deleted successfully."); // Redirect to homepage or another page
-  }
-});
-
 const questionsRef = collection(db, "classrooms", classroomId, "questions");
 
 // Listen for real-time updates
