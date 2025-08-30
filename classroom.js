@@ -122,6 +122,6 @@ onSnapshot(questionsRef, (snapshot) => {
     })
 
     questionList.appendChild(div);
-    questionList.appendChild(deleteBtn);
+    div.appendChild(deleteBtn);
   });
 });
