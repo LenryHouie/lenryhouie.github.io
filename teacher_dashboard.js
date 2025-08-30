@@ -87,7 +87,7 @@ async function loadClassrooms(teacherId) {
       e.stopPropagation(); // Prevent triggering the classroom click event
       const confirmDelete = confirm('Are you sure you want to delete this classroom?');
       if (confirmDelete) {
-        await deleteDoc(doc(db,'classrooms', docSnap.id));
+        await deleteDoc(doc(db,'classrooms', doc.id));
         alert('Classroom has been successfully deleted.');
         loadClassrooms(teacherId);
       }
