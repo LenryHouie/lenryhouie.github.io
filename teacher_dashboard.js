@@ -76,6 +76,14 @@ async function loadClassrooms(teacherId) {
 
 }
 
+document.getElementById("deleteClassroomBtn").addEventListener("click", async () => {
+  const confirmDelete = confirm("Are you sure you want to delete this classroom?");
+  if (confirmDelete) {
+    await deleteDoc(doc(db, "questions", classroomId));
+    alert("Question deleted successfully."); // Redirect to homepage or another page
+  }
+});
+
 function generateClassCode() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
