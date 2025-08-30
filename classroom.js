@@ -115,7 +115,7 @@ onSnapshot(questionsRef, (snapshot) => {
       e.stopPropagation();
       const confirmDelete = confirm('Are you sure you want to delete this question?');
       if (confirmDelete) {
-        await deleteDoc(doc(db, 'questions',docSnap.id))
+        await deleteDoc(doc(db, 'questions',questionDoc.id))
         alert('Question has been successfully deleted.');
         loadQuestions();
       }
