@@ -41,7 +41,7 @@ onAuthStateChanged(auth, async (user) => {
 
   const studentData = studentSnap.data();
   document.getElementById("student-info").innerHTML = `
-    <p>Email: ${user.email}</p>
+    <p>${user.name}<br>Email: ${user.email}</p>
   `;
 
   loadJoinedClassrooms(studentData.joinedClasses || [], db);
