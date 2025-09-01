@@ -14,8 +14,18 @@ import {
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyC7q11pgl578bVjPwDXojkFbyeO2M47Hqo",
+  authDomain: "tamaed-1fa70.firebaseapp.com",
+  projectId: "tamaed-1fa70",
+};
 
-// Checks to see if user is logged in
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const urlParams = new URLSearchParams(window.location.search);
+const classroomId = urlParams.get("id");
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     // user.uid is the logged-in user
@@ -34,18 +44,6 @@ onAuthStateChanged(auth, async (user) => {
     window.location.href = "signin.html";
   }
 });
-
-const firebaseConfig = {
-  apiKey: "AIzaSyC7q11pgl578bVjPwDXojkFbyeO2M47Hqo",
-  authDomain: "tamaed-1fa70.firebaseapp.com",
-  projectId: "tamaed-1fa70",
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const urlParams = new URLSearchParams(window.location.search);
-const classroomId = urlParams.get("id");
 
 let classroomData = null;
 
