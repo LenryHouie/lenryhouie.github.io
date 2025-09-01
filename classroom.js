@@ -12,11 +12,23 @@ import {
   where,
   getDocs,
   onSnapshot
-} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";\
+} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
+
+// Checks to see if user is logged in
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     // user.uid is the logged-in user
+    // gets user role from firestore
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+    const role = userSnap.data().role;
+    // checks to see if student or teacher, and changes html accordingly
+    if (role === "teacher") {
+      document.getElementById("teacherSection").style.display = "block";
+    } else if (role === "student") {
+      document.getElementById("studentSection").style.display = "block";
+    }
   } else {
     // if not logged in, send them to sign in
     window.location.href = "signin.html";
