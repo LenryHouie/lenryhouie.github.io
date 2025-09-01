@@ -12,8 +12,17 @@ import {
   where,
   getDocs,
   onSnapshot
-} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
-// TODO: Replace with your Firebase config
+} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";\
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    // user.uid is the logged-in user
+  } else {
+    // if not logged in, send them to sign in
+    window.location.href = "signin.html";
+  }
+});
+
 const firebaseConfig = {
   apiKey: "AIzaSyC7q11pgl578bVjPwDXojkFbyeO2M47Hqo",
   authDomain: "tamaed-1fa70.firebaseapp.com",
