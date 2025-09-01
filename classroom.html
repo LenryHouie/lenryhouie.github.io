@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>classroom</title>
-</head>
-<body>
-
+<div id="teacherSection" style="display:none;">
   <h3>Create a Question</h3>
 
   <label>Difficulty:
@@ -14,18 +9,26 @@
       <option>Medium</option>
       <option>Hard</option>
     </select>
-  </label><br/>
-
+  </label>
+  <br/>
   <label>Topic (within subject):
-    <input type="text" id="topicInput" placeholder="e.g., Fractions or Civil War">
+    <input type="text" id="topic" palceholder="e.g., Fractions or Geometry"  </label>
   </label><br/>
 
   <div id="questionStatus" style="color: green; margin-bottom: 10px;"></div>
-  <button id="createQuestionBtn">Create Question</button>
+  <button id="createQuestionBtn">Create Questions</button>
 
   <h4>Generated Questions:</h4>
-  <div id="questionList" style="margin-top: 20px;"></div>
+  <div id="'questionList" style ="margin-top: 20px;"></div>
+</div>
 
-  <script type="module" src="classroom.js"></script>
-</body>
-</html>
+<hr/>
+
+<!-- Student tools -->
+<div id="studentSection" style="display:none;">
+  <h3>Your Tamagotchi</h3>
+  <div id="petContainer">🐣</div>
+  <button id="feedPetBtn">Feed</button>
+  <button id="playPetBtn">Play</button>
+  <div id="studentQuestions"></div>
+</div>
