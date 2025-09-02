@@ -83,7 +83,7 @@ document.getElementById("createQuestionBtn").addEventListener("click", async () 
   const questionText = generateTemplateQuestion(questionParams);
 
   try {
-    await addDoc(collection(db, "questions"), {
+    await addDoc(collection(db,"classrooms", classroomId, "questions"), {
       classroomId,
       ...questionParams,
       text: questionText,
@@ -125,11 +125,10 @@ onSnapshot(questionsRef, (snapshot) => {
       e.stopPropagation();
       const confirmDelete = confirm('Are you sure you want to delete this question?');
       if (confirmDelete) {
-        await deleteDoc(doc(db, 'questions',questionDoc.id))
+        await deleteDoc(doc(db, "classrooms", classroomId, "questions", questionDoc.id))
         alert('Question has been successfully deleted.');
       }
     })
     div.appendChild(deleteBtn);
-    questionList.appendChild(div);
   });
 });
