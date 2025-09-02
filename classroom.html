@@ -4,37 +4,41 @@
   <script type="module" src="classroom.js"></script>
   <meta charset="UTF-8" />
 </head>
+<body>
+  <div id="teacherSection" style="display:none;">
+    <h3>Create a Question</h3>
+    <label>
+      Difficulty:
+      <select id="difficulty">
+        <option>Easy</option>
+        <option>Medium</option>
+        <option>Hard</option>
+      </select>
+    </label>
+    <br/>
+    <label>
+      Topic (within subject):
+      <input type="text" id="topic" placeholder="e.g., Fractions or Geometry"  </label>
+      </label>
+    <br/>
 
-<div id="teacherSection" style="display:none;">
-  <h3>Create a Question</h3>
+    <div id="questionStatus" style="color: green; margin-bottom: 10px;"></div>
+    <button id="createQuestionBtn">Create Questions</button>
 
-  <label>Difficulty:
-    <select id="difficulty">
-      <option>Easy</option>
-      <option>Medium</option>
-      <option>Hard</option>
-    </select>
-  </label>
-  <br/>
-  <label>Topic (within subject):
-    <input type="text" id="topic" palceholder="e.g., Fractions or Geometry"  </label>
-  </label><br/>
+    <h4>Generated Questions:</h4>
+    <div id="questionList" style ="margin-top: 20px;"></div>
+  </div>
 
-  <div id="questionStatus" style="color: green; margin-bottom: 10px;"></div>
-  <button id="createQuestionBtn">Create Questions</button>
+  <hr/>
 
-  <h4>Generated Questions:</h4>
-  <div id="'questionList" style ="margin-top: 20px;"></div>
-</div>
-
-<hr/>
-
-<!-- Student tools -->
-<div id="studentSection" style="display:none;">
-  <h3>Your Tamagotchi</h3>
-  <div id="petContainer">🐣</div>
-  <button id="feedPetBtn">Feed</button>
-  <button id="playPetBtn">Play</button>
-  <div id="studentQuestions"></div>
-</div>
+  <!-- Student tools -->
+  <div id="studentSection" style="display:none;">
+    <h3>Your Tamagotchi</h3>
+    <div id="petContainer">🐣</div>
+    <button id="feedPetBtn">Feed</button>
+    <button id="playPetBtn">Play</button>
+    <div id="studentQuestions"></div>
+  </div>
+</body>
+</html>
 
