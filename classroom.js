@@ -32,7 +32,8 @@ onAuthStateChanged(auth, async (user) => {
     // gets user role from firestore
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
-    const role = userSnap.data().role;
+    const userData = userSnap.data();
+    const role = userData.role;
     // checks to see if student or teacher, and changes html accordingly
     if (role === "teacher") {
       document.getElementById("teacherSection").style.display = "block";
