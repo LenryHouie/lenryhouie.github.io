@@ -65,20 +65,18 @@ document.getElementById("createQuestionBtn").addEventListener("click", async () 
     solution: data.solution,
     createdAt: Timestamp.now()
   });
-
-  loadQuestions();
 });
 
 const questionsRef = collection(db, "classrooms", classroomId, "questions");
 
 // Listen for real-time updates
 onSnapshot(questionsRef, (snapshot) => {
+  const questionList = document.getElementById("questionList");
   questionList.innerHTML = ""; // Clear existing list
   snapshot.forEach((questionDoc) => {
     const question = questionDoc.data();
     const div = document.createElement("div");
     div.textContent = `Question:${question.question}, Solution: ${question.solution}`;
-    questionList.appendChild(div);
 
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = "Delete";
@@ -88,6 +86,9 @@ onSnapshot(questionsRef, (snapshot) => {
     deleteBtn.style.border = "none";
     deleteBtn.style.borderRadius = "5px";
     deleteBtn.style.cursor = "pointer";
+
+    div.appendChild(deleteBtn);
+    questionList.appendChild(div); // <-- Only append after adding the button
 
     deleteBtn.addEventListener('click', async (e) => {
       e.stopPropagation();
