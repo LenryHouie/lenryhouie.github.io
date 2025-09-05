@@ -20,6 +20,8 @@ const firebaseConfig = {
   projectId: "tamaed-1fa70",
 };
 
+fetchClassroomInfo();
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
