@@ -71,14 +71,11 @@ const questionsRef = collection(db, "classrooms", classroomId, "questions");
 
 // Listen for real-time updates
 onSnapshot(questionsRef, (snapshot) => {
-  const questionsList = document.getElementById("questions-List");
-  questionList.innerHTML = ""; //Clear before rendering
-
-
+  questionList.innerHTML = ""; // Clear existing list
   snapshot.forEach((questionDoc) => {
     const question = questionDoc.data();
-   const div = document.createElement("div");
-   div.textContent = `${question.difficulty} - ${question.topic} : ${question.text || "(no question text)"}`;
+    const div = document.createElement("div");
+    div.textContent = `Question:${question.question}, Solution: ${question.solution}`;
     questionList.appendChild(div);
 
     const deleteBtn = document.createElement('button');
