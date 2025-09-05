@@ -70,7 +70,7 @@ async function loadClassrooms(teacherId) {
     div.className = "classroom";  // ✅ style hook
     div.innerHTML = `<p>Class Code: ${classroom.classCode}</p>`;
     div.addEventListener("click", () => {
-      window.location.href = `classroom.html?id=${docSnap.id}`;
+      window.location.href = `classroom_teacher.html?id=${docSnap.id}`;
     });
     classroomList.appendChild(div);
 

@@ -88,7 +88,7 @@ async function loadJoinedClassrooms(classroomIds, db) {
       div.className = "classroom";
       div.innerHTML = `
         <p>Class Code: ${classroom.classCode}</p>
-        <button onclick="window.location.href='classroom.html?id=${id}'">Go to Classroom</button>
+        <button onclick="window.location.href='classroom_student.html?id=${id}'">Go to Classroom</button>
       `;
       classroomList.appendChild(div);
     }

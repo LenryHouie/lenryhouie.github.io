@@ -26,26 +26,6 @@ const db = getFirestore(app);
 const urlParams = new URLSearchParams(window.location.search);
 const classroomId = urlParams.get("id");
 
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    // user.uid is the logged-in user
-    // gets user role from firestore
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
-    const userData = userSnap.data();
-    const role = userData.role;
-    // checks to see if student or teacher, and changes html accordingly
-    if (role === "teacher") {
-      document.getElementById("teacherSection").style.display = "block";
-    } else if (role === "student") {
-      document.getElementById("studentSection").style.display = "block";
-    }
-  } else {
-    // if not logged in, send them to sign in
-    window.location.href = "signin.html";
-  }
-});
-
 let classroomData = null;
 
 async function fetchClassroomInfo() {
