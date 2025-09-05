@@ -37,46 +37,33 @@ async function fetchClassroomInfo() {
   }
 }
 
-// Template question generator
-function generateTemplateQuestion({ subject, topic, gradeLevel, difficulty }) {
-  return `(${difficulty}) Grade ${gradeLevel} ${subject} - Topic: ${topic}
-Q: Explain one key idea about ${topic} in ${subject}.`;
+async function generateMathQuestion() {
+  const response = await fetch("https://simple-math-problems.p.rapidapi.com/addition/single", {
+    method: "GET",
+    headers: {
+      "x-rapidapi-key": "ff85a721a1msh5f52f0e3cf7ca4cp11b699jsn1574e0152b07",
+      "x-rapidapi-host": "simple-math-problems.p.rapidapi.com"
+    }
+  });
+
+  const data = await response.json();
+  // Suppose API gives you { problem: "5 + 3", solution: 8 }
+  return data.problem;
 }
 
 document.getElementById("createQuestionBtn").addEventListener("click", async () => {
   if (!classroomData) return alert("Classroom data not loaded.");
 
-  const topic = document.getElementById("topicInput").value.trim();
-  const difficulty = document.getElementById("difficulty").value;
+  const problem = await generateMathQuestion();
 
-  if (!topic) {
-    alert("Please enter a topic.");
-    return;
-  }
-
-  const questionParams = {
+  await addDoc(collection(db, "classrooms", classroomId, "questions"), {
+    classroomId,
     subject: classroomData.subject,
-    topic,
-    gradeLevel: classroomData.gradeLevel,
-    difficulty
-  };
+    text: problem,
+    createdAt: Timestamp.now()
+  });
 
-  const questionText = generateTemplateQuestion(questionParams);
-
-  try {
-    await addDoc(collection(db,"classrooms", classroomId, "questions"), {
-      classroomId,
-      ...questionParams,
-      text: questionText,
-      createdAt: Timestamp.now()
-    });
-
-    document.getElementById("questionStatus").textContent = "Question created successfully!";
-    document.getElementById("topicInput").value = ""; // Clear input field
-  } catch (error) {
-    console.error("Error creating question:", error);
-    document.getElementById("questionStatus").textContent = "Error creating question.";
-  }
+  loadQuestions();
 });
 
 const questionsRef = collection(db, "classrooms", classroomId, "questions");
