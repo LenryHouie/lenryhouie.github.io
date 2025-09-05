@@ -43,5 +43,6 @@ document.getElementById("loadQuestions").addEventListener("click", async () => {
     questionsSnapshot.forEach((doc) => {
         const questionData = doc.data();
         console.log("Question:", questionData);
+        
     });
 });

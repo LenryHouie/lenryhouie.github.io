@@ -48,18 +48,19 @@ async function generateMathQuestion() {
 
   const data = await response.json();
   // Suppose API gives you { problem: "5 + 3", solution: 8 }
-  return data.problem;
+  return data;
 }
 
 document.getElementById("createQuestionBtn").addEventListener("click", async () => {
   if (!classroomData) return alert("Classroom data not loaded.");
 
-  const problem = await generateMathQuestion();
+  const data = await generateMathQuestion();
 
   await addDoc(collection(db, "classrooms", classroomId, "questions"), {
     classroomId,
     subject: classroomData.subject,
-    text: problem,
+    question: data.problem,
+    solution: data.solution,
     createdAt: Timestamp.now()
   });
 
