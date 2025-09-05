@@ -20,7 +20,6 @@ const firebaseConfig = {
   projectId: "tamaed-1fa70",
 };
 
-fetchClassroomInfo();
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -29,6 +28,8 @@ const urlParams = new URLSearchParams(window.location.search);
 const classroomId = urlParams.get("id");
 
 let classroomData = null;
+
+fetchClassroomInfo();
 
 async function fetchClassroomInfo() {
   const classroomDoc = await getDoc(doc(db, "classrooms", classroomId));
