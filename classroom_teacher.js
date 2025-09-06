@@ -49,23 +49,31 @@ async function generateMathQuestion() {
     }
   });
 
+  if (!response.ok) {
+    throw new Error(`API request failed: ${response.status}`);
+  }
   const data = await response.json();
   // Suppose API gives you { problem: "5 + 3", solution: 8 }
-  return data;
+  console.log("Generated Question:", data);
+  return {
+    question: data.problem || data.question,
+    solution: data.solution || data.answer
+  };
 }
 
 document.getElementById("createQuestionBtn").addEventListener("click", async () => {
   if (!classroomData) return alert("Classroom data not loaded.");
 
-  const data = await generateMathQuestion();
+  const { question, solution } = await generateMathQuestion();
 
   await addDoc(collection(db, "classrooms", classroomId, "questions"), {
     classroomId,
     subject: classroomData.subject,
-    question: data.problem,
-    solution: data.solution,
+    question,
+    solution,
     createdAt: Timestamp.now()
   });
+  console.log("Question saved to Firestore:", question);
 });
 
 const questionsRef = collection(db, "classrooms", classroomId, "questions");
