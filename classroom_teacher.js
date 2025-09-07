@@ -40,40 +40,46 @@ async function fetchClassroomInfo() {
   }
 }
 
-async function generateMathQuestion() {
-  const response = await fetch("https://simple-math-problems.p.rapidapi.com/addition/single", {
-    method: "GET",
-    headers: {
-      "x-rapidapi-key": "ff85a721a1msh5f52f0e3cf7ca4cp11b699jsn1574e0152b07",
-      "x-rapidapi-host": "simple-math-problems.p.rapidapi.com"
-    }
-  });
+async function generateEquationQuestion() {
+  const a = Math.floor(Math.random() * 10) + 1; // random 1–10
+  const b = Math.floor(Math.random() * 20) - 10; // random -10–10
 
-  if (!response.ok) {
-    throw new Error(`API request failed: ${response.status}`);
+  try {
+    const response = await fetch(`https://solve-math-equation-ax-b-0.p.rapidapi.com/?a=${a}&b=${b}`, {
+      method: "GET",
+      headers: {
+        "x-rapidapi-key": "ff85a721a1msh5f52f0e3cf7ca4cp11b699jsn1574e0152b07",
+        "x-rapidapi-host": "solve-math-equation-ax-b-0.p.rapidapi.com"
+      }
+    });
+
+    if (!response.ok) throw new Error("API request failed: " + response.status);
+
+    const result = await response.json();
+    console.log("API response:", result);
+
+    const questionText = `Solve: ${a}x + ${b} = 0`;
+    const answer = result.solution; // depends on API field name
+
+    // Store in Firestore like your other questions
+    await addDoc(collection(db, "questions"), {
+      classroomId,
+      text: questionText,
+      answer: answer,
+      createdAt: Timestamp.now()
+    });
+
+    document.getElementById("questionStatus").textContent = "Question created!";
+    loadQuestions();
+  } catch (error) {
+    console.error("Error generating equation:", error);
+    document.getElementById("questionStatus").textContent = "Error generating question.";
   }
-  const data = await response.json();
-  // Suppose API gives you { problem: "5 + 3", solution: 8 }
-  console.log("Generated Question:", data);
-  return {
-    question: data.problem || data.question,
-    solution: data.solution || data.answer
-  };
 }
 
 document.getElementById("createQuestionBtn").addEventListener("click", async () => {
   if (!classroomData) return alert("Classroom data not loaded.");
-
-  const { question, solution } = await generateMathQuestion();
-
-  await addDoc(collection(db, "classrooms", classroomId, "questions"), {
-    classroomId,
-    subject: classroomData.subject,
-    question,
-    solution,
-    createdAt: Timestamp.now()
-  });
-  console.log("Question saved to Firestore:", question);
+  generateEquationQuestion();
 });
 
 const questionsRef = collection(db, "classrooms", classroomId, "questions");
