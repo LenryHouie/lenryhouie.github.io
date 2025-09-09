@@ -33,7 +33,7 @@ fetchClassroomInfo();
 async function generateTriviaQuestion() {
     const data = null;
     const xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
+    //xhr.withCredentials = true;
 
     xhr.addEventListener('readystatechange', async function() {
         if (this.readyState === this.DONE) {
