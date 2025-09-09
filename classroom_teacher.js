@@ -6,9 +6,9 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth
 import { getFirestore, doc, getDoc, collection, addDoc, Timestamp, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID"
+  apiKey: "AIzaSyC7q11pgl578bVjPwDXojkFbyeO2M47Hqo",
+  authDomain: "tamaed-1fa70.firebaseapp.com",
+  projectId: "tamaed-1fa70"
 };
 
 const app = initializeApp(firebaseConfig);
