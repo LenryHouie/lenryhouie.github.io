@@ -57,7 +57,7 @@ async function generateTriviaQuestion() {
         }
     });
 
-    xhr.open('GET', 'https://trivia-by-api-ninjas.p.rapidapi.com/v1/trivia?category=%5D');
+    xhr.open('GET', 'https://trivia-by-api-ninjas.p.rapidapi.com/v1/trivia');
     xhr.setRequestHeader('x-rapidapi-key', 'ff85a721a1msh5f52f0e3cf7ca4cp11b699jsn1574e0152b07');
     xhr.setRequestHeader('x-rapidapi-host', 'trivia-by-api-ninjas.p.rapidapi.com');
     xhr.send(data);
