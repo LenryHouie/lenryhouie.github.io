@@ -116,7 +116,7 @@ onSnapshot(questionsRef, (snapshot) => {
                 console.log('Question deleted.');
             }
         });
-
+        div.appendChild(text);
         div.appendChild(deleteBtn);
         questionList.appendChild(div);
     });
