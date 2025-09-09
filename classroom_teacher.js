@@ -98,7 +98,7 @@ onSnapshot(questionsRef, (snapshot) => {
         deleteBtn.style.cursor = "pointer";
         deleteBtn.style.color = "#cc0000";
         deleteBtn.style.fontSize = "16px";
-        deleteBtn.style.marginLeft = "15px";
+        deleteBtn.style.marginLeft = "auto";
         deleteBtn.title = "Delete Question";
         
         deleteBtn.addEventListener('mouseover', () => {
