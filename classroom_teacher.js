@@ -14,9 +14,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
-// Example classroom ID for testing
-const classroomId = "TEST_CLASSROOM_ID";
+const urlParams = new URLSearchParams(window.location.search);
+const classroomId = urlParams.get("id");
 
 // Fetch classroom info
 let classroomData = null;
@@ -79,16 +78,35 @@ onSnapshot(questionsRef, (snapshot) => {
     snapshot.forEach((questionDoc) => {
         const question = questionDoc.data();
         const div = document.createElement("div");
-        div.textContent = `Question: ${question.question}, Answer: ${question.answer}`;
+        div.style.display = "flex";
+        div.style.justifyContent = "space-between";
+        div.style.alignItems = "center";
+        div.style.padding = "10px";
+        div.style.border = "1px solid #ccc";
+        div.style.borderRadius = "8px";
+        div.style.marginBottom = "10px";
+        div.style.backgroundColor = "#f9f9f9";
+
+        const text = document.createElement("span");
+        text.textContent = `Question: ${question.question}, Answer: ${question.answer}`;
+        text.style.flex = "1";
 
         const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = "Delete";
-        deleteBtn.style.marginLeft = "10px";
-        deleteBtn.style.background = "red";
-        deleteBtn.style.color = "white";
+        deleteBtn.textContent = "❌";
+        deleteBtn.style.backgroundColor = "transparent";
         deleteBtn.style.border = "none";
-        deleteBtn.style.borderRadius = "5px";
         deleteBtn.style.cursor = "pointer";
+        deleteBtn.style.color = "#cc0000";
+        deleteBtn.style.fontSize = "16px";
+        deleteBtn.style.marginLeft = "15px";
+        deleteBtn.title = "Delete Question";
+        
+        deleteBtn.addEventListener('mouseover', () => {
+          deleteBtn.style.color = "#ff3333";
+        });
+        deleteBtn.addEventListener('mouseout', () => {
+          deleteBtn.style.color = "#cc0000";
+        })
 
         deleteBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
