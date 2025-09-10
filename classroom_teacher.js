@@ -2,7 +2,7 @@
 
 // Firebase initialization
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, collection, addDoc, Timestamp, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -16,6 +16,29 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const urlParams = new URLSearchParams(window.location.search);
 const classroomId = urlParams.get("id");
+
+let currentUser;
+
+onAuthStateChanged(async (user) => {
+  if (!user) {
+    return window.location.href = "index.html";
+    return;
+  }
+  currentUser = user;
+
+  const teacherRef = doc(db, "teachers", user.uid);
+  const teacherSnap = await getDoc(teacherRef);
+
+  if (!teacherSnap.exists()) {
+    alert("Teacher data not found.");
+    return;
+  }
+  const teacherData = teacherSnap.data();
+
+  document.getElementById("classrooomId").innerHTML = `
+    <p>Classroom ID: ${classroomId}</p>
+  `;
+});
 
 // Fetch classroom info
 let classroomData = null;
@@ -56,7 +79,7 @@ async function generateTriviaQuestion() {
         }
     });
 
-    xhr.open('GET', 'https://trivia-by-api-ninjas.p.rapidapi.com/v1/trivia');
+    xhr.open('GET', 'https://trivia-by-api-ninjas.p.rapidapi.com/v1/trivia?');
     xhr.setRequestHeader('x-rapidapi-key', 'ff85a721a1msh5f52f0e3cf7ca4cp11b699jsn1574e0152b07');
     xhr.setRequestHeader('x-rapidapi-host', 'trivia-by-api-ninjas.p.rapidapi.com');
     xhr.send(data);
