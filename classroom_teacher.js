@@ -35,7 +35,7 @@ onAuthStateChanged(auth, async (user) => {
   }
   const teacherData = teacherSnap.data();
 
-  document.getElementById("classrooomId").innerHTML = `
+  document.getElementById("classroomId").innerHTML = `
     <p>Classroom ID: ${classroomId}</p>
   `;
 });
