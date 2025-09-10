@@ -2,7 +2,9 @@ import {
   getFirestore,
   doc,
   getDoc,
-  updateDoc
+  updateDoc,
+  collection,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 import {
   getAuth,
@@ -20,11 +22,14 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+let currentUser;
+
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "index.html";
     return;
   }
+  currentUser = user;
 
   const studentRef = doc(db, "students", user.uid);
   const studentSnap = await getDoc(studentRef);
@@ -45,6 +50,13 @@ onAuthStateChanged(auth, async (user) => {
     displayPet(studentData.pet);
   } else {
     displayNoPetMessage();
+  }
+
+  // Load a random question for this classroom
+  const urlParams = new URLSearchParams(window.location.search);
+  const classroomId = urlParams.get("id");
+  if (classroomId) {
+    loadRandomQuestion(classroomId);
   }
 });
 
@@ -70,6 +82,44 @@ function displayNoPetMessage() {
     <p>Please go to your dashboard to initialize your pet.</p>
   `;
   document.body.appendChild(petContainer);
+}
+
+// Function to load a random question from classroom
+async function loadRandomQuestion(classroomId) {
+  const questionsCol = collection(db, "classrooms", classroomId, "questions");
+  const snapshot = await getDocs(questionsCol);
+  const questions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+  if (questions.length === 0) {
+    document.getElementById("question-area").innerHTML = "<p>No questions available.</p>";
+    return;
+  }
+
+  const randomIndex = Math.floor(Math.random() * questions.length);
+  const randomQuestion = questions[randomIndex];
+
+  const questionArea = document.getElementById("question-area") || document.createElement("div");
+  questionArea.id = "question-area";
+  questionArea.innerHTML = `
+    <h3>Question</h3>
+    <p>${randomQuestion.prompt}</p>
+    <input type="text" id="answer-input" placeholder="Enter your answer" />
+    <button id="submit-answer">Submit</button>
+    <p id="answer-feedback"></p>
+  `;
+  document.body.appendChild(questionArea);
+
+  document.getElementById("submit-answer").addEventListener("click", async () => {
+    const answer = document.getElementById("answer-input").value.trim();
+    const feedback = document.getElementById("answer-feedback");
+
+    if (answer.toLowerCase() === (randomQuestion.answer || "").toLowerCase()) {
+      feedback.textContent = "✅ Correct!";
+      await rewardPet(currentUser.uid);
+    } else {
+      feedback.textContent = "❌ Incorrect. Try again.";
+    }
+  });
 }
 
 // Call this when a student answers a question correctly
