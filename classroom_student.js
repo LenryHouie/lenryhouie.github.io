@@ -1,48 +1,105 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
 import {
   getFirestore,
   doc,
   getDoc,
-  collection,
-  addDoc,
-  Timestamp,
-  deleteDoc,
-  query,
-  where,
-  getDocs,
-  onSnapshot
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC7q11pgl578bVjPwDXojkFbyeO2M47Hqo",
   authDomain: "tamaed-1fa70.firebaseapp.com",
-  projectId: "tamaed-1fa70",
+  projectId: "tamaed-1fa70"
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const db = getFirestore(app);
-const urlParams = new URLSearchParams(window.location.search);
-const classroomId = urlParams.get("id");
+const auth = getAuth(app);
 
-let classroomData = null;
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "index.html";
+    return;
+  }
 
-async function fetchClassroomInfo() {
-    const classroomDoc = await getDoc(doc(db, 'classrooms', classroomId));
-    if (classroommDoc.exists()){
-        classroomData = classroomDoc.data()
-    } else {
-        alert("Classroom not found.")
-    }
+  const studentRef = doc(db, "students", user.uid);
+  const studentSnap = await getDoc(studentRef);
+
+  if (!studentSnap.exists()) {
+    alert("Student data not found.");
+    return;
+  }
+
+  const studentData = studentSnap.data();
+
+  document.getElementById("student-info").innerHTML = `
+    <p>${user.displayName || "Student"}<br>Email: ${user.email}</p>
+  `;
+
+  // Display pet info (if it exists)
+  if (studentData.pet) {
+    displayPet(studentData.pet);
+  } else {
+    displayNoPetMessage();
+  }
+});
+
+// Function to display pet info
+function displayPet(pet) {
+  const petContainer = document.getElementById("pet-info") || document.createElement("div");
+  petContainer.id = "pet-info";
+  petContainer.innerHTML = `
+    <h3>Your Pet: 🐶</h3>
+    <p>Attention: ${pet.attention}</p>
+    <p>Level: ${pet.level}</p>
+    <p>EXP: ${pet.exp}</p>
+  `;
+  document.body.appendChild(petContainer);
 }
 
-document.getElementById("loadQuestions").addEventListener("click", async () => {
-    const questionsRef = collection(db, "classrooms", classroomId, "questions");
-    const questionsSnapshot = await getDocs(questionsRef);
-    questionsSnapshot.forEach((doc) => {
-        const questionData = doc.data();
-        console.log("Question:", questionData);
-        
-    });
-});
+// Function to show message if no pet exists
+function displayNoPetMessage() {
+  const petContainer = document.getElementById("pet-info") || document.createElement("div");
+  petContainer.id = "pet-info";
+  petContainer.innerHTML = `
+    <h3>No Pet Found</h3>
+    <p>Please go to your dashboard to initialize your pet.</p>
+  `;
+  document.body.appendChild(petContainer);
+}
+
+// Call this when a student answers a question correctly
+export async function rewardPet(userId, expGain = 10, attentionGain = 5) {
+  const studentRef = doc(db, "students", userId);
+  const studentSnap = await getDoc(studentRef);
+  if (!studentSnap.exists()) return;
+
+  const pet = studentSnap.data().pet;
+  if (!pet) return; // no pet to update
+
+  let newExp = (pet.exp || 0) + expGain;
+  let newLevel = pet.level || 0;
+
+  if (newExp >= 100) {
+    newLevel += 1;
+    newExp = newExp - 100; // rollover excess exp
+  }
+
+  await updateDoc(studentRef, {
+    "pet.exp": newExp,
+    "pet.level": newLevel,
+    "pet.attention": Math.min(100, (pet.attention || 0) + attentionGain)
+  });
+
+  // Update the pet display
+  displayPet({
+    ...pet,
+    exp: newExp,
+    level: newLevel,
+    attention: Math.min(100, (pet.attention || 0) + attentionGain)
+  });
+}

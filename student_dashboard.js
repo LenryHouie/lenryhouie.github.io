@@ -127,25 +127,3 @@ function displayPet(pet) {
   `;
   document.body.appendChild(petContainer);
 }
-
-// Call this when a student answers a question correctly
-export async function rewardPet(userId, expGain = 10, attentionGain = 5) {
-  const studentRef = doc(db, "students", userId);
-  const studentSnap = await getDoc(studentRef);
-  if (!studentSnap.exists()) return;
-
-  const pet = studentSnap.data().pet;
-  let newExp = (pet.exp || 0) + expGain;
-  let newLevel = pet.level || 0;
-
-  if (newExp >= 100) {
-    newLevel += 1;
-    newExp = newExp - 100; // rollover excess exp
-  }
-
-  await updateDoc(studentRef, {
-    "pet.exp": newExp,
-    "pet.level": newLevel,
-    "pet.attention": Math.min(100, (pet.attention || 0) + attentionGain)
-  });
-}
