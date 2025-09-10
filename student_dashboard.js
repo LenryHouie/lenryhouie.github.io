@@ -6,8 +6,10 @@ import {
   getDocs,
   doc,
   getDoc,
+  setDoc,
   updateDoc,
-  arrayUnion
+  arrayUnion,
+  increment
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 import {
   getAuth,
@@ -40,11 +42,31 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   const studentData = studentSnap.data();
+
+  // If pet data doesn't exist, initialize it
+  if (!studentData.pet) {
+    await setDoc(studentRef, {
+      pet: {
+        type: "dog",
+        attention: 100, // starts full
+        level: 0,
+        exp: 0
+      }
+    }, { merge: true });
+  }
+
+  // Load updated student data
+  const updatedSnap = await getDoc(studentRef);
+  const updatedData = updatedSnap.data();
+
   document.getElementById("student-info").innerHTML = `
-    <p>${user.name}<br>Email: ${user.email}</p>
+    <p>${user.displayName || "Student"}<br>Email: ${user.email}</p>
   `;
 
-  loadJoinedClassrooms(studentData.joinedClasses || [], db);
+  // Display pet info
+  displayPet(updatedData.pet);
+
+  loadJoinedClassrooms(updatedData.joinedClasses || [], db);
 
   document.getElementById("join-classroom-btn").addEventListener("click", async () => {
     const code = document.getElementById("class-code-input").value.trim();
@@ -54,7 +76,6 @@ onAuthStateChanged(auth, async (user) => {
       return;
     }
 
-    // Look for classroom with this code
     const q = query(collection(db, "classrooms"), where("classCode", "==", code));
     const querySnapshot = await getDocs(q);
 
@@ -66,13 +87,12 @@ onAuthStateChanged(auth, async (user) => {
     const classroomDoc = querySnapshot.docs[0];
     const classroomId = classroomDoc.id;
 
-    // Update student document with new class ID
     await updateDoc(studentRef, {
       joinedClasses: arrayUnion(classroomId)
     });
 
     alert(`Joined classroom with code: ${code}`);
-    loadJoinedClassrooms([...studentData.joinedClasses || [], classroomId], db);
+    loadJoinedClassrooms([...(updatedData.joinedClasses || []), classroomId], db);
   });
 });
 
@@ -93,4 +113,39 @@ async function loadJoinedClassrooms(classroomIds, db) {
       classroomList.appendChild(div);
     }
   }
+}
+
+// Function to display pet info
+function displayPet(pet) {
+  const petContainer = document.getElementById("pet-info") || document.createElement("div");
+  petContainer.id = "pet-info";
+  petContainer.innerHTML = `
+    <h3>Your Pet: 🐶</h3>
+    <p>Attention: ${pet.attention}</p>
+    <p>Level: ${pet.level}</p>
+    <p>EXP: ${pet.exp}</p>
+  `;
+  document.body.appendChild(petContainer);
+}
+
+// Call this when a student answers a question correctly
+export async function rewardPet(userId, expGain = 10, attentionGain = 5) {
+  const studentRef = doc(db, "students", userId);
+  const studentSnap = await getDoc(studentRef);
+  if (!studentSnap.exists()) return;
+
+  const pet = studentSnap.data().pet;
+  let newExp = (pet.exp || 0) + expGain;
+  let newLevel = pet.level || 0;
+
+  if (newExp >= 100) {
+    newLevel += 1;
+    newExp = newExp - 100; // rollover excess exp
+  }
+
+  await updateDoc(studentRef, {
+    "pet.exp": newExp,
+    "pet.level": newLevel,
+    "pet.attention": Math.min(100, (pet.attention || 0) + attentionGain)
+  });
 }
