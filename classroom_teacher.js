@@ -19,9 +19,9 @@ const classroomId = urlParams.get("id");
 
 let currentUser;
 
-onAuthStateChanged(async (user) => {
+onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    return window.location.href = "index.html";
+    window.location.href = "index.html";
     return;
   }
   currentUser = user;
