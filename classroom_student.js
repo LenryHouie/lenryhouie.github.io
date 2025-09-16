@@ -118,9 +118,9 @@ async function loadRandomQuestion(classroomId) {
       feedback.textContent = "✅ Correct!";
       setTimeout(() => {
       feedback.textContent = "";
+      loadRandomQuestion(classroomId); // Load a new question
     }, 2000); 
       await rewardPet(currentUser.uid);
-      loadRandomQuestion(classroomId); // Load a new question
     } else {
       feedback.textContent = "❌ Incorrect. Try again.";
       setTimeout(() => {
