@@ -109,17 +109,25 @@ async function loadRandomQuestion(classroomId) {
   `;
   document.body.appendChild(questionArea);
 
-  document.getElementById("submit-answer").addEventListener("click", async () => {
+  const submitBtn = document.getElementById("submit-answer");
+  submitBtn.onclick = async () => {
     const answer = document.getElementById("answer-input").value.trim();
     const feedback = document.getElementById("answer-feedback");
 
     if (answer.toLowerCase() === (randomQuestion.answer || "").toLowerCase()) {
       feedback.textContent = "✅ Correct!";
+      setTimeout(() => {
+      feedback.textContent = "";
+    }, 2000); 
       await rewardPet(currentUser.uid);
+      loadRandomQuestion(classroomId); // Load a new question
     } else {
       feedback.textContent = "❌ Incorrect. Try again.";
+      setTimeout(() => {
+      feedback.textContent = "";
+    }, 2000); 
     }
-  });
+  };
 }
 
 // Call this when a student answers a question correctly
