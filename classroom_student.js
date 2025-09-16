@@ -102,7 +102,7 @@ async function loadRandomQuestion(classroomId) {
   questionArea.id = "question-area";
   questionArea.innerHTML = `
     <h3>Question</h3>
-    <p>${randomQuestion.prompt}</p>
+    <p>${randomQuestion.question}</p>
     <input type="text" id="answer-input" placeholder="Enter your answer" />
     <button id="submit-answer">Submit</button>
     <p id="answer-feedback"></p>
